@@ -1,0 +1,51 @@
+/* Formatted on 02/06/2017 08:10:36 (QP5 v5.294) */
+SELECT a.nota_id,
+      a.numero_nota,
+      a.status_rps,
+      a.status_sap,
+      l.status status_sap_interf,
+      a.dt_emissao,
+      a.DT_EMISSAO_RPS,
+      l.ID_LOG_INTERF,
+      l.ID_TIPO_INTERF,
+      l.DAT_ENVIO,
+      l.DAT_RETORNO,
+      l.IND_PROCESS_NEGOCIO,      
+      l.XML_INTERF,
+      l.XML_ERRO ,
+      er.COD_ERRO,
+      er.COD_SAP,
+      er.DAT_ERRO,
+      er.DSC_MSG_ERRO,
+      er.IND_TIPO_ERRO
+ FROM sc_nota_fiscal a
+      left JOIN ADMMI.SAP_LOG_INTERF l
+         ON  a.NUMERO_NOTA = l.ID_NEGOCIO and l.ID_TIPO_INTERF in(170,168,169,171)
+      left join sc_sap_log_erro er on er.NOTA_ID = a.nota_id
+WHERE trunc(a.DT_EMISSAO) >= '02/06/2017' AND a.status_rps = 'OK'        
+and a.STATUS_SAP <> 'OK'
+
+
+SELECT A.* FROM ADMMI.SAP_TIPO_INTERF A WHERE ID_TIPO_INTERF in(170,168,169,171);
+
+BEGIN
+ADMSCOL.SC_PKG_MI_SAP.PRC_ENVIA_LOG_ERRO_SAP(:P_EMAIL);
+END;
+
+select a.P_NUM_REFCIA,a.DT_RETORNO from sap_log_erro_retorno_interf@admmi.wilsonsons.com.br a where a.P_NUM_REFCIA = 'SC1680000031876'
+
+BEGIN
+ADMMI.PKG_SAP_INTERF.PRC_JOB('SD_NOTA_SCOL_NFEW');   --wilport
+--ADMMI.PKG_SAP_INTERF.PRC_JOB('SD_NOTA_SCOL_NF_E');     --tecon
+END;
+
+begin
+ADMSCOL.SC_PKG_MI_SAP.PRC_JOB;
+end;
+
+select a.* from  ADMMI.SAP_LOG_INTERF a where a.ID_NEGOCIO ='576832';
+
+select * from admmi.sap_sd_header a where cod_interf = 'SD_NOTA_SCOL_NF_E' and id_negocio = '577346';
+
+
+select * from admmi.SAP_LOG_EXEC@admmi.wilsonsons.com.br where id_log_interf = 9584063;
